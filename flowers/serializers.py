@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Flower, Comment
+from .models import Flower, Comment, PlantRevivalTip
 
 class FlowerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,3 +29,8 @@ class ContactFormSerializer(serializers.Serializer):
     email = serializers.EmailField()
     message = serializers.CharField(max_length=1000)
 
+
+class FlowerCareTipSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlantRevivalTip
+        fields = '__all__'

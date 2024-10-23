@@ -1,10 +1,11 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import FlowerViewSet, FlowerDetail, CommentViewSet, CommentAPIView, CommentShowAPIView, CommentCheckOrderAPIView,ContactFormView
+from .views import FlowerViewSet, FlowerDetail, CommentViewSet, CommentAPIView, CommentShowAPIView, CommentCheckOrderAPIView,ContactFormView, FlowerCareTipViewSet
 
 router = DefaultRouter()
 router.register('flowers', FlowerViewSet)
 router.register('comments', CommentViewSet)
+router.register('care-tips', FlowerCareTipViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -13,4 +14,5 @@ urlpatterns = [
     path('get_comment/<int:postId>/', CommentShowAPIView.as_view(), name='get_comment'),
     path('check_order/',CommentCheckOrderAPIView.as_view(), name='check_order'),
     path('contact/', ContactFormView.as_view(), name='contact-form'),
+    path('', include(router.urls)),
 ]

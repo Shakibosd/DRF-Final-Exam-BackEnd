@@ -18,3 +18,21 @@ class Comment(models.Model):
     name = models.CharField(max_length=200)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+
+
+class PlantRevivalTip(models.Model):
+    plant_name = models.CharField(max_length=255)
+    symptoms = models.TextField()
+    revival_steps = models.TextField()
+    recommended_fertilizer = models.CharField(max_length=100)
+    watering_caution = models.CharField(max_length=100)
+    sunlight_adjustment = models.CharField(max_length=100)
+    sunlight_needs = models.CharField(max_length=100)  
+    recommended_water_frequency = models.CharField(max_length=100)  
+    special_notes = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Revival Tips for {self.plant_name}"
+

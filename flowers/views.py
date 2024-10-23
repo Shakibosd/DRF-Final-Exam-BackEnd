@@ -14,6 +14,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
+from .models import PlantRevivalTip
+from .serializers import FlowerCareTipSerializer
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -113,3 +115,6 @@ class ContactFormView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class FlowerCareTipViewSet(viewsets.ModelViewSet):
+    queryset = PlantRevivalTip.objects.all()
+    serializer_class = FlowerCareTipSerializer
