@@ -143,7 +143,8 @@ class OrderStatsAPIView(APIView):
         total_revenue = Order.objects.annotate(
             total_price=F('quantity') * F('flower__price')
         ).aggregate(total_revenue=Sum('total_price'))['total_revenue'] or Decimal('0')
-
+        
+        # Profit calculation (10% of total revenue as Decimal)
         profit = total_revenue * Decimal('0.10')
         
         return Response({
