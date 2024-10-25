@@ -78,9 +78,9 @@ class OrderSummaryAPIView(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly]
     
     def get(self, request, *args, **kwargs):
-        total_products_sold = Order.objects.aggregate(total_quantity=models.Sum('quantity'))['total_quantity']
-        total_revenue = Order.objects.aggregate(total_revenue=models.Sum('revenue'))['total_revenue'] 
-        total_profit = Order.objects.aggregate(total_profit=models.Sum('profit'))['total_profit'] 
+        total_products_sold = Order.objects.aggregate(total_quantity=models.Sum('quantity'))['total_quantity'] or 0
+        total_revenue = Order.objects.aggregate(total_revenue=models.Sum('revenue'))['total_revenue'] or 0.0
+        total_profit = Order.objects.aggregate(total_profit=models.Sum('profit'))['total_profit'] or 0.0
         
         return Response({
             'total_products_sold': total_products_sold,
