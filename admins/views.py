@@ -8,6 +8,7 @@ from .serializers import UserSerializer
 from rest_framework import status
 from orders.models import Order
 from django.db.models import Sum, F
+from decimal import Decimal
 
 #ei code diye check kortesi user admin super user ki na.
 class IsAdminView(APIView): 
@@ -134,6 +135,7 @@ class UserDetailView(APIView):
 #             "total_revenue": total_revenue,
 #             "total_products": total_products,
 #         })
+
 class OrderStatsAPIView(APIView):
     def get(self, request):
         total_orders = Order.objects.count()
@@ -141,8 +143,8 @@ class OrderStatsAPIView(APIView):
             total_price=F('quantity') * F('flower__price')
         ).aggregate(total_revenue=Sum('total_price'))['total_revenue'] or 0
         
-        # Profit calculation (10% of total revenue)
-        profit = total_revenue * 0.10
+        # Profit calculation (10% of total revenue as Decimal)
+        profit = total_revenue * Decimal('0.10')
         
         return Response({
             "total_orders": total_orders,
