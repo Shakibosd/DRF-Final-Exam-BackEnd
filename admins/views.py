@@ -120,17 +120,33 @@ class UserDetailView(APIView):
 
 
 
+# class OrderStatsAPIView(APIView):
+#     def get(self, request):
+#         total_orders = Order.objects.count()
+#         total_revenue = Order.objects.annotate(
+#             total_price=F('quantity') * F('flower__price')
+#         ).aggregate(total_revenue=Sum('total_price'))['total_revenue'] or 0
+
+#         total_products = Flower.objects.count()
+        
+#         return Response({
+#             "total_orders": total_orders,
+#             "total_revenue": total_revenue,
+#             "total_products": total_products,
+#         })
 class OrderStatsAPIView(APIView):
     def get(self, request):
         total_orders = Order.objects.count()
         total_revenue = Order.objects.annotate(
             total_price=F('quantity') * F('flower__price')
         ).aggregate(total_revenue=Sum('total_price'))['total_revenue'] or 0
-
-        total_products = Flower.objects.count()
+        
+        # Profit calculation (10% of total revenue)
+        profit = total_revenue * 0.10
         
         return Response({
             "total_orders": total_orders,
             "total_revenue": total_revenue,
-            "total_products": total_products,
+            "total_products": Order.objects.aggregate(total_products=Sum('quantity'))['total_products'] or 0,
+            "profit": profit,
         })
