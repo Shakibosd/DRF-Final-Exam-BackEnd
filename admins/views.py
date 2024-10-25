@@ -6,6 +6,8 @@ from flowers.serializers import FlowerSerializer
 from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from rest_framework import status
+from orders.models import Order
+from django.db.models import Sum, F
 
 #ei code diye check kortesi user admin super user ki na.
 class IsAdminView(APIView): 
@@ -116,3 +118,15 @@ class UserDetailView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class OrderStatsAPIView(APIView):
+    def get(self, request):
+        total_orders = Order.objects.count()
+        total_revenue = Order.objects.annotate(
+            total_price=F('quantity') * F('flower__price')
+        ).aggregate(total_revenue=Sum('total_price'))['total_revenue'] or 0
+        
+        return Response({
+            "total_orders": total_orders,
+            "total_revenue": total_revenue,
+        })
