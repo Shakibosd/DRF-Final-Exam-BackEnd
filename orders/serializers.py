@@ -12,7 +12,7 @@ class OrderSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Order
-        fields = ['id', 'user', 'flower', 'quantity', 'status', 'order_date']
+        fields = ['id', 'user', 'flower', 'quantity', 'status', 'order_date', 'revenue', 'profit']
 
 class OrderSerializerForCreate(serializers.Serializer):
     user_id = serializers.IntegerField()
