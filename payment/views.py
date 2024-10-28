@@ -19,8 +19,8 @@ def payment(request):
     post_body['fail_url'] = "https://flower-seal-backend.vercel.app/orders/my_orders/"
     post_body['cancel_url'] = "https://flower-seal-backend.vercel.app/flowers/flowers/"
     post_body['emi_option'] = 0
-    post_body['cus_name'] =  request.user.username
-    post_body['cus_email'] = request.user.email
+    post_body['cus_name'] =  "request user username"
+    post_body['cus_email'] = "request user email"
     post_body['cus_phone'] = "01700000000" #যে ইউজার পোডাক্ট টি কিনবে তার মোবাইল এখানে সো হবে। 
     post_body['cus_add1'] = "Cantonment" #যে ইউজার পোডাক্ট টি কিনবে তার ঠিকানা এখানে সো হবে।
     post_body['cus_city'] = "Dhaka" #যে ইউজার পোডাক্ট টি কিনবে তার সিটি এখানে সো হবে।
