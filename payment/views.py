@@ -14,11 +14,11 @@ def payment(request):
     post_body['total_amount'] = 100.26 #এখানে ওরা ডামি একটা পেমেন্ট দিছে, কিন্তু আমার প্রোডাক্ট এর প্রাইস যত টাকা টিক তত টাকা পেমেন্ট দিবে হবে ইউজার কে।
     post_body['currency'] = "BDT"
     post_body['tran_id'] = unique_transaction_id_generator()
-    post_body['success_url'] = "http://127.0.0.1:8000/orders/my_orders/"
-    post_body['fail_url'] = "http://127.0.0.1:8000/orders/my_orders/"
-    post_body['cancel_url'] = "http://127.0.0.1:8000/orders/my_orders/"
+    post_body['success_url'] = "https://flower-seal-backend.vercel.app/orders/my_orders/"
+    post_body['fail_url'] = "https://flower-seal-backend.vercel.app/orders/my_orders/"
+    post_body['cancel_url'] = "https://flower-seal-backend.vercel.app/my_orders/"
     post_body['emi_option'] = 0
-    post_body['cus_name'] = "test" #যে ইউজার প্রোডাক্ট টি কিনবে তার নাম এখানে সো হবে। exp: request.user.username
+    post_body['cus_name'] = "test"#যে ইউজার প্রোডাক্ট টি কিনবে তার নাম এখানে সো হবে। exp: request.user.username
     post_body['cus_email'] = "test@test.com"#যে ইউজার পোডাক্ট টি কিনবে তার ইমেইল এখানে সো হবে। exp: request.user.email
     post_body['cus_phone'] = "01700000000"#যে ইউজার পোডাক্ট টি কিনবে তার মোবাইল এখানে সো হবে। exp: request.user.phone_number
     post_body['cus_add1'] = "Cantonment"#যে ইউজার পোডাক্ট টি কিনবে তার ঠিকানা এখানে সো হবে। exp: request.user.address
