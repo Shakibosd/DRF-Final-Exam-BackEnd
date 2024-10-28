@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from flowers.models import Flower
 from .constants import ORDER_STATUS
+from decimal import Decimal
 
 class Order(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -15,7 +16,7 @@ class Order(models.Model):
     def __str__(self):
         return f'{self.id} {self.user.username}'
     
-    def save(self, *args, **kwargs):
-        self.revenue = self.flower.price * self.quantity 
-        self.profit = self.revenue * 0.20  
+    def save(self, *args, **kwargs): 
+        self.revenue = self.flower.price * self.quantity
+        self.profit = self.revenue * Decimal('0.20') 
         super().save(*args, **kwargs)

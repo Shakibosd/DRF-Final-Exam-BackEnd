@@ -5,7 +5,7 @@ class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ['flower', 'quantity']
-
+    
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
     flower = serializers.StringRelatedField()

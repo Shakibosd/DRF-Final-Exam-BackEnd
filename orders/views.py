@@ -34,13 +34,16 @@ class OrderAPIView(APIView):
 class OrderView(APIView):
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializerForCreate(data=request.data)
+        
         if serializer.is_valid():
             print(serializer)
             user_id = serializer.validated_data['user_id']
             product_id = serializer.validated_data['product_id']
             quantity = serializer.validated_data['quantity']
+            
             user = get_object_or_404(User, id=user_id)
             flower = get_object_or_404(Flower, id=product_id)
+            
             order = Order.objects.create(
                 user=user,
                 flower=flower,
