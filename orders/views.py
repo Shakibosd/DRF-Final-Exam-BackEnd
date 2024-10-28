@@ -11,12 +11,12 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from .models import Order
 from .serializers import OrderSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 from django.db import models
 
 #eta hocce flower order korar jonno post and get
 class OrderAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsAuthenticated]
     def get(self, request, *args, **kwargs):
         orders = Order.objects.filter(user=request.user)
         serializer = OrderSerializer(orders, many=True)
@@ -32,23 +32,26 @@ class OrderAPIView(APIView):
 
 #eta hocce order history dekar jonno and order view dekar jonno and flower kinar pore email jabe and flower buy korle quentity kome jabe
 class OrderView(APIView):
+    permission_classes = [IsAuthenticated]
+
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializerForCreate(data=request.data)
-        
+
         if serializer.is_valid():
-            print(serializer)
-            user_id = serializer.validated_data['user_id']
+            user = request.user
             product_id = serializer.validated_data['product_id']
             quantity = serializer.validated_data['quantity']
-            
-            user = get_object_or_404(User, id=user_id)
+
             flower = get_object_or_404(Flower, id=product_id)
-            
+
+            if flower.stock < quantity:
+                return Response({'error': 'Insufficient stock available'}, status=status.HTTP_400_BAD_REQUEST)
+
             order = Order.objects.create(
                 user=user,
                 flower=flower,
                 quantity=quantity,
-                status='Pending',  
+                status='Pending',
             )
             flower.stock -= quantity
             flower.save()
@@ -64,22 +67,12 @@ class OrderView(APIView):
             email.attach_alternative(email_body, 'text/html')
             email.send()
 
-            
-            return Response({
-                'status': 'Order Placed Successfully And Check Your Email'
-            }, status=status.HTTP_201_CREATED)
-        else:
-            print(serializer.errors) 
+            return Response({'status': 'Order Placed Successfully. Check Your Email'}, status=status.HTTP_201_CREATED)
 
-        return Response({
-            'error': 'order not created',
-            'details': serializer.errors 
-        }, status=status.HTTP_400_BAD_REQUEST)
-        
+        return Response({'error': 'Order not created', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
 
 class OrderSummaryAPIView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-    
     def get(self, request, *args, **kwargs):
         total_products_sold = Order.objects.aggregate(total_quantity=models.Sum('quantity'))['total_quantity'] or 0
         total_revenue = Order.objects.aggregate(total_revenue=models.Sum('revenue'))['total_revenue'] or 0.0
