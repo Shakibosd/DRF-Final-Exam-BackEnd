@@ -5,7 +5,7 @@
     functionalities for the three main roles in the system: Admin, Student, and Faculty. It is built using TypeScript, Express.js, Zod validation, and MongoDB.</p>
     <h2>Functional Requirements</h2>
     <h3>Student</h3>
-    <ul class="grey">
+    <ul style="color: grey;">
       <li>Student can login and log out.</li>
       <li>Student can manage and update their profile.</li>
       <li>Student can update certain fields.</li>
