@@ -31,6 +31,6 @@
       <li>Student can manage and update their profile.</li>
       <li>Student can update certain fields.</li>
     </ul>
-    <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/">Download Windows 64-bit</a></h4>
+    <h4>Postman Documenttaion : <a target="_blank" href="https://www.postman.com/downloads/">Download Windows 64-bit</a></h4>
   </div>
 </section>
