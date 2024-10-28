@@ -33,6 +33,6 @@
     </ul>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download Windows 64-bit</a></h4>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download Mac 64-bit</a></h4>
-    <h4>Postman Documenttaion : <a href="">Download Windows 64-bit</a></h4>
+    <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download Linux 64-bit</a></h4>
   </div>
 </section>
