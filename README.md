@@ -1,8 +1,7 @@
 <section>
   <div class="center">
     <h1 class="center">Flower Seal Management</h1>
-    <p>This is the documentation for the Authentication Service component of the University Management System. The Authentication Service provides authentication and authorization 
-    functionalities for the three main roles in the system: Admin, Student, and Faculty. It is built using TypeScript, Express.js, Zod validation, and MongoDB.</p>
+    <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this application. I used HTML, CSS, JavaScript, Bootstrap and Django to build this application.</p>
     <h2>Functional Requirements</h2>
     <h3>Student</h3>
     <ul>
