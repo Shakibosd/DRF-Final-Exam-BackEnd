@@ -3,11 +3,11 @@
     <h1 class="center">Flower Seal Management</h1>
     <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this application. I used HTML, CSS, JavaScript, Bootstrap and Django to build this application.</p>
     <h2>Functional Requirements</h2>
-    <h3>Student</h3>
+    <h3>Users</h3>
     <ul>
-      <li>Student can login and log out.</li>
-      <li>Student can manage and update their profile.</li>
-      <li>Student can update certain fields.</li>
+      <li>User can register.</li>
+      <li>User can login, logout</li>
+      <li>User can see his list in details.</li>
     </ul>
     <h3>Admin</h3>
     <ul>
