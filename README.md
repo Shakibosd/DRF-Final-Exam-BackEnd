@@ -1,7 +1,12 @@
 <section>
   <div class="center">
     <h1 class="center">Flower Seal Management</h1>
-    <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this application. I used HTML, CSS, JavaScript, Bootstrap and Django to build this application.</p>
+    <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this 
+     application. I used HTML, CSS, JavaScript, Bootstrap and Django to build this application.</p>
+    <ul>
+      <ol>Admin</ol>
+      <ol>User</ol>
+    </ul>
     <h2>Functional Requirements</h2>
     <h3>Users</h3>
     <ul>
