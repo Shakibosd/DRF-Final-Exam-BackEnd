@@ -43,6 +43,11 @@
     <ul>
       <li>SSL Commerce added for payment.</li>
     </ul>
+    <h1>API Endpoints</h1>
+    <h3>Users</h3>
+    <ul>
+      <li>SSL Commerce added for payment.</li>
+    </ul>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download 64-bit</a></h4>
   </div>
 </section>
