@@ -4,8 +4,8 @@
     <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this 
      application. I used HTML, CSS, JavaScript, Bootstrap and Django to build this application.</p>
     <ol>
-      <li>Admin</ol>
-      <li>User</ol>
+      <li>Admin</li>
+      <li>User</li>
     </ol>
     <h2>Functional Requirements</h2>
     <h3>Users</h3>
