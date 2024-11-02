@@ -12,28 +12,36 @@
     <ul>
       <li>User can register.</li>
       <li>User can login, logout</li>
-      <li>User can see his list in details.</li>
     </ul>
-    <h3>Admin</h3>
+    <h3>Flowers</h3>
     <ul>
-      <li>Admin can log in and log out.</li>
-      <li>Admin can manage and update their profile.</li>
-      <li>Admin can only update certain fields.</li>
-      <li>Admin can manage user accounts</li>
-      <li>Change Password</li>
+      <li>You can see the list of all the flowers and the details of the flowers.</li>
+      <li>You can see the reviews that users have given in flowers.</li>
+      <li>Here are some tips for caring for flowers.</li>
     </ul>
-     <h3>Faculty</h3>
+     <h3>Orders</h3>
     <ul>
-      <li>Student can login and log out.</li>
-      <li>Student can manage and update their profile.</li>
-      <li>Student can update certain fields.</li>
+      <li>You can order</li>
+      <li>You will see the orders you have placed</li>
+      <li>You can view order summaries.</li>
     </ul>
-    <h1>API Endpoints</h1>
-    <h4>User</h4>
+    <h3>Profiles</h3>
     <ul>
-      <li>Student can login and log out.</li>
-      <li>Student can manage and update their profile.</li>
-      <li>Student can update certain fields.</li>
+      <li>User can see his profile.</li>
+      <li>User can also change password.</li>
+    </ul>
+    <h3>Admins</h3>
+    <ul>
+      <li>Lists of users can be seen.</li>
+      <li>Lists of users can be seen in details.</li>
+      <li>User admin can be seen.</li>
+      <li>You will see the list of posts</li>
+      <li>You will see the details of the post.</li>
+      <li>The status of the order can be seen.</li>
+    </ul>
+    <h3>Payment</h3>
+    <ul>
+      <li>SSL Commerce added for payment.</li>
     </ul>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download 64-bit</a></h4>
   </div>
