@@ -46,7 +46,10 @@
     <h1>API Endpoints</h1>
     <h3>Users</h3>
     <ul>
-      <li>SSL Commerce added for payment.</li>
+      <li>POST/users/register/</li>
+      <li>POST/users/login/</li>
+      <li>GET/users/logout/</li>
+      <li>GET,POST,HEAD/users/users/</li>
     </ul>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download 64-bit</a></h4>
   </div>
