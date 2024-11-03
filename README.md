@@ -49,7 +49,38 @@
       <li>POST/users/register/</li>
       <li>POST/users/login/</li>
       <li>GET/users/logout/</li>
-      <li>GET,POST,HEAD/users/users/</li>
+      <li>GET,POST/users/users/</li>
+    </ul>
+    <h3>Flowers</h3>
+    <ul>
+      <li>GET, POST/flowers/flowers/</li>
+      <li>GET, POST//flowers/comments/</li>
+      <li>GET, POST//flowers/comments/</li>
+      <li>GET,POST/flowers/care-tips/</li>
+    </ul>
+    <h3>Order</h3>
+    <ul>
+      <li>POST/orders/create_order/</li>
+      <li>GET, POST/orders/my_orders/</li>
+      <li>GET/orders/order_summary/</li>
+    </ul>
+    <h3>Proiles</h3>
+    <ul>
+      <li>GET, PUT/profiles/user/2/</li>
+      <li>POST/profiles/pass_cng/</li>
+    </ul>
+    <h3>Admins</h3>
+    <ul>
+      <li>GET, POST/admins/post_list/</li>
+      <li>GET, PUT, DELETE/admins/post_detail/1/</li>
+      <li>GET/admins/is_admin/</li>
+      <li>GET/admins/user_list/</li>
+      <li>GET, PUT/admins/user_detail/1/</li>
+      <li>GET/admins/order-stats/</li>
+    </ul>
+    <h3>Payment</h3>
+    <ul>
+      <li>GET or POST/payment/payment</li>
     </ul>
     <h4>Postman Documenttaion : <a href="https://www.postman.com/downloads/?utm_source=postman-home">Download 64-bit</a></h4>
   </div>
