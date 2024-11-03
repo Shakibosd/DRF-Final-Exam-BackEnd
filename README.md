@@ -1,6 +1,6 @@
 <section>
   <div class="center">
-    <h1 class="center">Flower Seal Management</h1>
+    <h1 style="red">Flower Seal Management</h1>
     <p>This application is flowersale where you can see and buy different categories of flowers. Authentication system is also added in this 
      application. I used Django Rest Framework to build this application.</p>
     <ol>
