@@ -1,5 +1,5 @@
 from rest_framework import viewsets
-from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer
+from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer, CommentEditSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -113,6 +113,18 @@ class ContactFormView(APIView):
             )
             return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
         
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CommentEditAPIView(APIView):
+    def put(self, request, *args, **kwargs):
+        comment_id = self.kwargs['commentId']  # commentId from URL parameters
+        comment = Comment.objects.get(id=comment_id)
+
+        # Validate and update the comment data
+        serializer = CommentEditSerializer(comment, data=request.data, partial=True)  # partial=True to update only specific fields
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"message": "Comment updated successfully!"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class FlowerCareTipViewSet(viewsets.ModelViewSet):

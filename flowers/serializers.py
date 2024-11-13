@@ -20,6 +20,11 @@ class CommentSerializer(serializers.Serializer):
     class Meta:
         model = Comment
         fields = ['flowerId', 'names', 'comment']
+        
+class CommentEditSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
+        fields = ['id', 'name', 'body'] 
 
 class CommentCheckOrderSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
