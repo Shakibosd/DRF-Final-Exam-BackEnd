@@ -130,3 +130,4 @@ class CommentEditAPIView(APIView):
 class FlowerCareTipViewSet(viewsets.ModelViewSet):
     queryset = PlantRevivalTip.objects.all()
     serializer_class = FlowerCareTipSerializer
+    
