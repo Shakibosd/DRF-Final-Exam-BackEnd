@@ -35,12 +35,12 @@ def payment(request, flower_id):
         'shipping_method': "NO",
         'multi_card_name': "",
         'num_of_item': 1,
-        'product_name': "flowertitle",
-        'product_category': "flowercategory",
+        'product_name': flower.title,
+        'product_category': flower.category,
         'product_profile': "general"
     }
 
     response = sslcz.createSession(post_body)  
-    print(response)
+    # print(response)
     
     return redirect(response['GatewayPageURL'])
