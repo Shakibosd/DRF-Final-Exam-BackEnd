@@ -20,7 +20,7 @@ def payment(request, flower_id):
     
     post_body = {
         'total_amount': flower.price,  
-        'currency': "BDT",
+        'currency': ".00BDT",
         'tran_id': unique_transaction_id_generator(),
         'success_url': "",
         'fail_url': "",
