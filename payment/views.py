@@ -26,9 +26,9 @@ def payment(request, flower_id):
         'fail_url': f"https://flower-seal.netlify.app/flower_details.html?id={flower.id}",
         'cancel_url': f"https://flower-seal.netlify.app/flower_details.html?id={flower.id}",
         'emi_option': 0,
-        'cus_name': "request.user.username",  # Dynamically get user info
-        'cus_email':" request.user.email",
-        'cus_phone': "request.user.profile.phone",  # Assuming user has profile with phone field
+        'cus_name': "requestuserusername",
+        'cus_email': "requestuseremail",
+        'cus_phone': "01700000000",
         'cus_add1': "Cantonment",
         'cus_city': "Dhaka",
         'cus_country': "Bangladesh",
@@ -40,10 +40,8 @@ def payment(request, flower_id):
         'product_profile': "general"
     }
 
-    response = sslcz.createSession(post_body)
+    response = sslcz.createSession(post_body)  
+    # print(response)
     
-    if response['status'] == 'SUCCESS':
-        return redirect(response['GatewayPageURL'])
-    else:
-        # Handle failure, e.g., log error or notify user
-        return redirect('failure_url')  # You may define a failure URL or message
+    return redirect(response['GatewayPageURL'])
+
