@@ -20,7 +20,7 @@ def payment(request, flower_id):
     
     post_body = {
         'total_amount': flower.price,  
-        'currency': ".00BDT",
+        'currency': "BDT",
         'tran_id': unique_transaction_id_generator(),
         'success_url': "",
         'fail_url': "",
@@ -44,3 +44,4 @@ def payment(request, flower_id):
     # print(response)
     
     return redirect(response['GatewayPageURL'])
+
