@@ -15,9 +15,13 @@ class Flower(models.Model):
 
 class Comment(models.Model):
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
+    # name = models.CharField(max_length=200)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username} - {self.body[:50]}"
 
 
 class PlantRevivalTip(models.Model):
@@ -35,4 +39,3 @@ class PlantRevivalTip(models.Model):
 
     def __str__(self):
         return f"Revival Tips for {self.plant_name}"
-

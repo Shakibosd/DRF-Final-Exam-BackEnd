@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 from .models import PlantRevivalTip
 from .serializers import FlowerCareTipSerializer
+from rest_framework.exceptions import AuthenticationFailed
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -58,25 +59,35 @@ class CommentShowAPIView(generics.ListAPIView):
         postId = self.kwargs["postId"]
         flower = Flower.objects.get(id = postId)
         return Comment.objects.filter(flower = flower)
-        
-class CommentAPIView(APIView):        
-    def post(self, request, *args, **kwargs):
+                    
+class CommentAPIView(APIView):
+    def post(self, request, *args, **kwargs):        
         serializer = CommentSerializer(data=request.data)
         if serializer.is_valid():
             try:
-                flowerId = serializer.validated_data['flowerId']   
-                names = serializer.validated_data['names']   
-                comment = serializer.validated_data['comment']   
+                flowerId = serializer.validated_data['flowerId']
+                comment = serializer.validated_data['comment']
                 flower = get_object_or_404(Flower, id=flowerId)
+                
+                user = request.user  
+
                 Comment.objects.create(
                     flower=flower,
-                    name=names,
+                    user=user,
                     body=comment,
                 )
-                return Response({"comment created"}, status=status.HTTP_201_CREATED)
+                return Response({"message": "Comment created successfully!"}, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        return Response({"comment not created"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Comment not created"}, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, commentId):
+        try:
+            comment = Comment.objects.get(id=commentId)
+            comment.delete()
+            return Response({"message": "Comment deleted successfully"}, status=status.HTTP_200_OK)
+        except Comment.DoesNotExist:
+            return Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
 
 #ekane check kora hocce user flower by now korese ki jodi by now kore thake tahole flower er modde comment korte parbe
 class CommentCheckOrderAPIView(APIView):
@@ -117,11 +128,10 @@ class ContactFormView(APIView):
 
 class CommentEditAPIView(APIView):
     def put(self, request, *args, **kwargs):
-        comment_id = self.kwargs['commentId']  # commentId from URL parameters
+        comment_id = self.kwargs['commentId']  
         comment = Comment.objects.get(id=comment_id)
 
-        # Validate and update the comment data
-        serializer = CommentEditSerializer(comment, data=request.data, partial=True)  # partial=True to update only specific fields
+        serializer = CommentEditSerializer(comment, data=request.data, partial=True)   
         if serializer.is_valid():
             serializer.save()
             return Response({"message": "Comment updated successfully!"}, status=status.HTTP_200_OK)

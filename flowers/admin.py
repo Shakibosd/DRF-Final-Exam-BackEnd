@@ -5,7 +5,7 @@ class FlowerAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'description', 'price', 'image', 'category', 'stock']
 
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'body', 'created_on']
+    list_display = ['id', 'body', 'user', 'created_on']
 
 class FlowerCareTipAdmin(admin.ModelAdmin):
     list_display = ['id', 'plant_name','symptoms','revival_steps','recommended_fertilizer','watering_caution','sunlight_adjustment', 'sunlight_needs', 'recommended_water_frequency','created_at', 'updated_at']

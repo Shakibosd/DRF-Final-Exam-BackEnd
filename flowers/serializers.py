@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Flower, Comment, PlantRevivalTip
+from django.contrib.auth.models import User
 
 class FlowerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -8,23 +9,25 @@ class FlowerSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 class CommentsSerializer(serializers.ModelSerializer):
+    user = serializers.StringRelatedField()
+    flower = serializers.StringRelatedField()
     class Meta:
         model = Comment
         fields = '__all__'
 
 class CommentSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
-    names = serializers.CharField(max_length=100)
+    # names = serializers.CharField(max_length=100)
     comment = serializers.CharField(max_length=1000)
-
+  
     class Meta:
         model = Comment
-        fields = ['flowerId', 'names', 'comment']
+        fields = ['flowerId', 'user', 'comment']
         
 class CommentEditSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ['id', 'name', 'body'] 
+        fields = ['id', 'body'] 
 
 class CommentCheckOrderSerializer(serializers.Serializer):
     flowerId = serializers.IntegerField()
