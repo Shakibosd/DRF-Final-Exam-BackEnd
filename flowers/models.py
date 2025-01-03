@@ -23,7 +23,6 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.user.username} - {self.body[:50]}"
 
-
 class PlantRevivalTip(models.Model):
     plant_name = models.CharField(max_length=255)
     symptoms = models.TextField()
