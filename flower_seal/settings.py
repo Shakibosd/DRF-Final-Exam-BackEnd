@@ -36,8 +36,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'users',
     'flowers',
+    'pass_change',
     'orders',
-    'profiles',
     'admins',
     'payment',
     'rest_framework.authtoken',
@@ -56,6 +56,12 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+# AUTH_USER_MODEL = 'profiles.CustomUser'
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:8000",

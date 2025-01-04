@@ -16,7 +16,6 @@ from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 from .models import PlantRevivalTip
 from .serializers import FlowerCareTipSerializer
-from rest_framework.exceptions import AuthenticationFailed
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):

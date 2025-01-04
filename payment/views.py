@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from sslcommerz_lib import SSLCOMMERZ
 from django.shortcuts import get_object_or_404, redirect
 from flowers.models import Flower
@@ -7,10 +6,12 @@ import random
 import string
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
+@login_required
 def payment(request, flower_id):
     flower = get_object_or_404(Flower, id=flower_id)
 
@@ -54,7 +55,7 @@ def payment(request, flower_id):
     return redirect(response['GatewayPageURL'])
 
 
-@csrf_exempt
+@csrf_exempt 
 def payment_success(request, *args, **kwargs):
     tran_id = request.POST.get('tran_id', None)
 
@@ -66,8 +67,10 @@ def payment_success(request, *args, **kwargs):
             order.save()
         messages.success(request, "Payment successfully completed!")
 
-    return redirect('http://127.0.0.1:5500/update_profile.html')
+        user_id = request.user.id
+        return redirect(f'http://127.0.0.1:5500/update_profile.html?user_id={user_id}')
 
+    
 
 @csrf_exempt
 def payment_fail(request, *args, **kwargs):
