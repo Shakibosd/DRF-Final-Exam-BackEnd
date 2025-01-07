@@ -18,4 +18,5 @@ urlpatterns = [
     path('contact/', ContactFormView.as_view(), name='contact-form'),
     path('comments/edit/<int:commentId>/', CommentEditAPIView.as_view(), name='comment-edit'),
     path('cart/', CartApiView.as_view(), name='cart'),
+    path('cart/remove/<int:cart_id>/', CartApiView.as_view(), name='cart_remove'),
 ]

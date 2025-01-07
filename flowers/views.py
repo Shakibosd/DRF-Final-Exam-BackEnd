@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 from .models import PlantRevivalTip
 from .serializers import FlowerCareTipSerializer
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -141,13 +142,14 @@ class FlowerCareTipViewSet(viewsets.ModelViewSet):
     
 
 class CartApiView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         cart_items = CartItem.objects.filter(user=request.user)
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
 
-    def post(self, request):
+    def post(self, request, *args, **kwargs):
 
         flower_id = request.data.get("flower")
         quantity = request.data.get("quantity")
@@ -162,3 +164,13 @@ class CartApiView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Flower.DoesNotExist:
             return Response({"Error" : "Flower Not Found"}, status=status.HTTP_404_NOT_FOUND)
+
+    
+    def delete(self, request, cart_id, *args, **kwargs):
+        try:
+            cart_item = CartItem.objects.get(id=cart_id, user=request.user)
+            cart_item.delete()
+            return Response({"Message" : "Item removed form cart success"}, status=status.HTTP_200_OK)
+        
+        except CartItem.DoesNotExist:
+            return Response({"Error" : "Cart item not found"}, status=status.HTTP_404_NOT_FOUND)
