@@ -97,6 +97,7 @@ class LoginAPIView(APIView):
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
+
         if serializer.is_valid():
             username = serializer.validated_data['username']
             password = serializer.validated_data['password']
@@ -104,14 +105,10 @@ class LoginAPIView(APIView):
 
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
-                print(token)
                 print(_)
                 login(request, user)
-                print(token.key)
-                return Response({'token': token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'token' : token.key, 'user_id' : user.id}, status=status.HTTP_200_OK)
+            return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 #user logout korar jonno
 class LogoutAPIView(APIView):

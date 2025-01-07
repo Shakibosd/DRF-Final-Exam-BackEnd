@@ -1,10 +1,10 @@
 from rest_framework import viewsets
-from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer, CommentEditSerializer
+from .serializers import CommentCheckOrderSerializer, FlowerSerializer, CommentsSerializer, CommentEditSerializer, CartItemSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
-from .models import Flower, Comment
+from .models import Flower, Comment, CartItem
 from orders.models import Order
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
@@ -117,7 +117,6 @@ class ContactFormView(APIView):
             send_mail(
                 subject,
                 email_message,
-                'your_email@example.com',  
                 ['syednazmusshakib94@gmail.com'],  
                 fail_silently=False,
             )
@@ -140,3 +139,26 @@ class FlowerCareTipViewSet(viewsets.ModelViewSet):
     queryset = PlantRevivalTip.objects.all()
     serializer_class = FlowerCareTipSerializer
     
+
+class CartApiView(APIView):
+
+    def get(self, request):
+        cart_items = CartItem.objects.filter(user=request.user)
+        serializer = CartItemSerializer(cart_items, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+
+        flower_id = request.data.get("flower")
+        quantity = request.data.get("quantity")
+
+        if not flower_id or not quantity:
+                return Response({"Error" : "Missing Flower Or Quantity Data"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            flower = Flower.objects.get(id=flower_id)
+            cart_item = CartItem.objects.create(user=request.user, flower=flower, quantity=quantity)
+            serializer = CartItemSerializer(cart_item)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except Flower.DoesNotExist:
+            return Response({"Error" : "Flower Not Found"}, status=status.HTTP_404_NOT_FOUND)
