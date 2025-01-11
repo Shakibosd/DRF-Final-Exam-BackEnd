@@ -1,12 +1,15 @@
+from django.http import HttpResponse
 from sslcommerz_lib import SSLCOMMERZ
 from django.shortcuts import get_object_or_404, redirect
 from flowers.models import Flower
 from orders.models import Order
+from users.models import Profile
 import random
 import string
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+# from django.contrib.auth.models import User
 
 def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -51,9 +54,27 @@ def payment(request, flower_id):
 
     response = sslcz.createSession(post_body)  
     # print(response)
-
     return redirect(response['GatewayPageURL'])
 
+# @login_required
+# @csrf_exempt
+# def payment_success(request, *args, **kwargs):
+#     tran_id = request.POST.get('tran_id', None)
+#     username = request.user.username
+
+#     if tran_id:
+#         order = Order.objects.filter(status='Pending', user=request.user).first()
+        
+#         if order:
+#             order.status = 'Completed'
+#             order.save()
+#             messages.success(request, "Payment successfully completed!")
+#         else:
+#             messages.error(request, "No pending order found for this user.")
+#     else:
+#         messages.error(request, "Transaction ID is missing.")
+    
+#     return redirect(f'http://127.0.0.1:5500/update_profile.html?YourUserName={username}')
 
 @csrf_exempt 
 def payment_success(request, *args, **kwargs):
@@ -65,12 +86,10 @@ def payment_success(request, *args, **kwargs):
         if order:
             order.status = 'Completed'
             order.save()
-        messages.success(request, "Payment successfully completed!")
+            messages.success(request, "Payment successfully completed!")
 
-        user_id = request.user.id
-        return redirect(f'http://127.0.0.1:5500/update_profile.html?user_id={user_id}')
-
-    
+    username = request.user.username
+    return redirect(f'http://127.0.0.1:5500/update_profile.html?YourUserName={username}')
 
 @csrf_exempt
 def payment_fail(request, *args, **kwargs):

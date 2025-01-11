@@ -1,3 +1,6 @@
+from datetime import datetime
+
+from django.http import HttpResponse
 from .models import Profile
 from rest_framework.authtoken.models import Token
 from django.shortcuts import redirect
@@ -14,6 +17,7 @@ from django.contrib.auth import authenticate, login, logout
 from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 #user dekar jonno
 class UserAPIView(APIView):
@@ -47,7 +51,6 @@ class UserAPIView(APIView):
 
         return Response(user_serializer.data)
 
-
     def delete(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user.delete()
@@ -65,7 +68,7 @@ class RegisterAPIView(APIView):
             token = default_token_generator.make_token(user)
             print(token)
             uid = urlsafe_base64_encode(force_bytes(user.pk))
-            print(uid)
+            print("uid : ",uid)
             confirm_link = f'http://127.0.0.1:8000/users/active/{uid}/{token}/'
             print(confirm_link)
             email_subject = 'Confirm Your Email'
@@ -105,9 +108,10 @@ class LoginAPIView(APIView):
 
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
-                print(_)
+        
                 login(request, user)
-                return Response({'token' : token.key, 'user_id' : user.id}, status=status.HTTP_200_OK)
+                return Response({'token': token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
+            
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
 
 #user logout korar jonno
@@ -119,4 +123,3 @@ class LogoutAPIView(APIView):
         
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
-    

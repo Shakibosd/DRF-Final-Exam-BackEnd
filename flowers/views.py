@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from .models import Flower, Comment, CartItem
-from orders.models import Order
+from orders.models import Order 
 from rest_framework import generics
 from flowers.serializers import CommentSerializer
 from django.shortcuts import get_object_or_404
@@ -150,22 +150,24 @@ class CartApiView(APIView):
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-
         flower_id = request.data.get("flower")
         quantity = request.data.get("quantity")
 
         if not flower_id or not quantity:
-                return Response({"Error" : "Missing Flower Or Quantity Data"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "Missing flower or quantity data"}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             flower = Flower.objects.get(id=flower_id)
-            cart_item = CartItem.objects.create(user=request.user, flower=flower, quantity=quantity)
-            serializer = CartItemSerializer(cart_item)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
         except Flower.DoesNotExist:
-            return Response({"Error" : "Flower Not Found"}, status=status.HTTP_404_NOT_FOUND)
+            return Response({"error": "Flower not found"}, status=status.HTTP_404_NOT_FOUND)
 
-    
+        existing_item = CartItem.objects.filter(flower=flower, user=request.user).first()
+        if existing_item:
+            return Response({"error": "This product is already in your cart!"}, status=status.HTTP_400_BAD_REQUEST)
+
+        cart_item = CartItem.objects.create(user=request.user, flower=flower, quantity=quantity)
+        return Response({"message": "Product added successfully!", "cart_item": cart_item.id}, status=status.HTTP_201_CREATED)
+
     def delete(self, request, cart_id, *args, **kwargs):
         try:
             cart_item = CartItem.objects.get(id=cart_id, user=request.user)

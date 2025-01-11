@@ -4,7 +4,7 @@ from .models import Order
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['flower', 'quantity']
+        fields = ['id', 'flower', 'quantity']
     
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
