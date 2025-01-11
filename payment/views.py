@@ -31,9 +31,9 @@ def payment(request, flower_id):
         'total_amount': flower.price,  
         'currency': "BDT",
         'tran_id': unique_transaction_id_generator(),
-        'success_url': f"http://127.0.0.1:8000/payment/payment_success/",
-        'fail_url': f"http://127.0.0.1:8000/payment/payment_fail/?id={flower.id}",
-        'cancel_url': f"http://127.0.0.1:8000/payment/payment_cancel/?id={flower.id}",
+        'success_url': f"https://flower-seal-backend.vercel.app/payment/payment_success/",
+        'fail_url': f"https://flower-seal-backend.vercel.app/payment/payment_fail/?id={flower.id}",
+        'cancel_url': f"https://flower-seal-backend.vercel.app/payment/payment_cancel/?id={flower.id}",
         'emi_option': 0,
         'cus_name': cus_name,
         'cus_email': cus_email,
@@ -65,20 +65,20 @@ def payment_success(self, *args, **kwargs):
             order.save()
             messages.success(self, "Payment successfully completed!")
 
-    return redirect(f'http://127.0.0.1:5500/order_history.html')
+    return redirect(f'https://flower-seal.netlify.app/order_history.html')
 
 @csrf_exempt
 def payment_fail(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)  
     if flower_id:
-        return redirect(f'http://127.0.0.1:5500/flower_details.html?id={flower_id}')
+        return redirect(f'https://flower-seal.netlify.app/flower_details.html?id={flower_id}')
     else:
-        return redirect('http://127.0.0.1:5500/authenticated_user.html')  
+        return redirect('https://flower-seal.netlify.app/authenticated_user.html')  
 
 @csrf_exempt
 def payment_cancel(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)
     if flower_id:
-        return redirect(f'http://127.0.0.1:5500/flower_details.html?id={flower_id}')
+        return redirect(f'https://flower-seal.netlify.app/flower_details.html?id={flower_id}')
     else:
-        return redirect('http://127.0.0.1:5500/authenticated_user.html')  
+        return redirect('https://flower-seal.netlify.app/authenticated_user.html')  
