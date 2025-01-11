@@ -85,4 +85,13 @@ class OrderSummaryAPIView(APIView):
             'total_revenue': total_revenue,
             'total_profit': total_profit
         })
-        
+
+
+class AllUsersOrderHistoryAPIView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, *args, **kwargs):
+        orders = Order.objects.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    

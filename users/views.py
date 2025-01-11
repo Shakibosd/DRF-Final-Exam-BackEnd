@@ -54,7 +54,7 @@ class UserAPIView(APIView):
     def delete(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_204_NO_CONTENT)  
 
 #user register korar jonno
 class RegisterAPIView(APIView):
