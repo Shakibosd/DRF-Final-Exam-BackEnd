@@ -18,9 +18,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_ALL_ORIGINS = True 
 
-LOGIN_URL = "http://127.0.0.1:5500/login.html"
+CSRF_TRUSTED_ORIGINS = ['https://flower-seal-backend.vercel.app']
 
 # Application definition
 INSTALLED_APPS = [
@@ -62,11 +62,6 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # AUTH_USER_MODEL = 'profiles.CustomUser'
-
-CORS_ALLOWED_ORIGINS = [
-    "https://flower-seal-backend.vercel.app",
-    "https://flower-seal.netlify.app",
-]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

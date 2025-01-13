@@ -6,7 +6,7 @@ import random
 import string
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required  
 
 def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
@@ -31,9 +31,9 @@ def payment(request, flower_id):
         'total_amount': flower.price,  
         'currency': "BDT",
         'tran_id': unique_transaction_id_generator(),
-        'success_url': f"https://flower-seal-backend.vercel.app/payment/payment_success/",
-        'fail_url': f"https://flower-seal-backend.vercel.app/payment/payment_fail/?id={flower.id}",
-        'cancel_url': f"https://flower-seal-backend.vercel.app/payment/payment_cancel/?id={flower.id}",
+        'success_url': f"http://127.0.0.1:8000/payment/payment_success/",
+        'fail_url': f"http://127.0.0.1:8000/payment/payment_fail/?id={flower.id}",
+        'cancel_url': f"http://127.0.0.1:8000/payment/payment_cancel/?id={flower.id}",
         'emi_option': 0,
         'cus_name': cus_name,
         'cus_email': cus_email,
@@ -48,14 +48,13 @@ def payment(request, flower_id):
         'product_category': flower.category,
         'product_profile': "general",
     }
-
     response = sslcz.createSession(post_body)  
-    # print(response)
     return redirect(response['GatewayPageURL'])
 
+
 @csrf_exempt 
-def payment_success(self, *args, **kwargs):
-    tran_id = self.POST.get('tran_id', None)
+def payment_success(request, *args, **kwargs):
+    tran_id = request.POST.get('tran_id', None)
 
     if tran_id:
         order = Order.objects.filter(status='Pending').first()
@@ -63,22 +62,22 @@ def payment_success(self, *args, **kwargs):
         if order:
             order.status = 'Completed'
             order.save()
-            messages.success(self, "Payment successfully completed!")
+            messages.success(request, "Payment successfully completed!")
 
-    return redirect(f'https://flower-seal.netlify.app/order_history.html')
+    return redirect(f'http://127.0.0.1:5500/order_history.html')
 
 @csrf_exempt
 def payment_fail(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)  
     if flower_id:
-        return redirect(f'https://flower-seal.netlify.app/flower_details.html?id={flower_id}')
+        return redirect(f'http://127.0.0.1:5500/flower_details.html?id={flower_id}')
     else:
-        return redirect('https://flower-seal.netlify.app/authenticated_user.html')  
+        return redirect('http://127.0.0.1:5500/authenticated_user.html')  
 
 @csrf_exempt
 def payment_cancel(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)
     if flower_id:
-        return redirect(f'https://flower-seal.netlify.app/flower_details.html?id={flower_id}')
+        return redirect(f'http://127.0.0.1:5500/flower_details.html?id={flower_id}')
     else:
-        return redirect('https://flower-seal.netlify.app/authenticated_user.html')  
+        return redirect('http://127.0.0.1:5500/authenticated_user.html')  
