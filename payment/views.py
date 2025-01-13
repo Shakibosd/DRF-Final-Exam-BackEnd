@@ -1,4 +1,3 @@
-from django.http import JsonResponse
 from sslcommerz_lib import SSLCOMMERZ
 from django.shortcuts import get_object_or_404, redirect
 from flowers.models import Flower
@@ -8,15 +7,12 @@ import string
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required  
-from rest_framework import status
 
 def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + string.digits):
     return ''.join(random.choice(chars) for _ in range(size))
 
 @login_required
 def payment(request, flower_id):
-    if not  request.user.is_authenticated:
-        return JsonResponse({"Error" : "User Not Logdin"}, status=status.HTTP_403_FORBIDDEN)
     flower = get_object_or_404(Flower, id=flower_id)
 
     settings = { 
