@@ -20,8 +20,6 @@ ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 
 CORS_ALLOW_ALL_ORIGINS = True 
 
-CSRF_TRUSTED_ORIGINS = ['https://flower-seal-backend.vercel.app']
-
 # Application definition
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic', 
@@ -57,11 +55,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-]
-
-# AUTH_USER_MODEL = 'profiles.CustomUser'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -125,10 +118,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
-REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
-}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
