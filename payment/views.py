@@ -13,8 +13,6 @@ def unique_transaction_id_generator(size=10, chars=string.ascii_uppercase + stri
 
 @login_required
 def payment(request, flower_id):
-    if not request.user.is_authenticated:
-        return redirect(f'https://flower-seal.netlify.app/login.html')
     flower = get_object_or_404(Flower, id=flower_id)
 
     settings = { 
