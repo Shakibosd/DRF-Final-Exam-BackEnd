@@ -16,7 +16,6 @@ from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 from .models import PlantRevivalTip
 from .serializers import FlowerCareTipSerializer
-# from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
@@ -142,7 +141,6 @@ class FlowerCareTipViewSet(viewsets.ModelViewSet):
     
 
 class CartApiView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, *args, **kwargs):
         cart_items = CartItem.objects.filter(user=request.user)

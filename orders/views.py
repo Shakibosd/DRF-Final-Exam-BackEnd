@@ -11,13 +11,10 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from .models import Order
 from .serializers import OrderSerializer
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django.db import models
 
 #eta hocce flower order korar jonno post and get
-class OrderAPIView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-
+class OrderAPIView(APIView): 
     def get(self, request, *args, **kwargs):
         orders = Order.objects.filter(user=request.user)
         serializer = OrderSerializer(orders, many=True)
@@ -33,8 +30,6 @@ class OrderAPIView(APIView):
 
 #eta hocce order history dekar jonno and order view dekar jonno and flower kinar pore email jabe and flower buy korle quentity kome jabe
 class OrderView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-
     def post(self, request, *args, **kwargs):
         serializer = OrderSerializerForCreate(data=request.data)
         if serializer.is_valid():
@@ -89,8 +84,6 @@ class OrderSummaryAPIView(APIView):
 
 
 class AllUsersOrderHistoryAPIView(APIView):
-    # permission_classes = [IsAuthenticatedOrReadOnly]
-
     def get(self, request, *args, **kwargs):
         orders = Order.objects.all()
         serializer = OrderSerializer(orders, many=True)
