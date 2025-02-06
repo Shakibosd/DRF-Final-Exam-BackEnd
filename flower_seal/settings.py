@@ -21,8 +21,8 @@ ALLOWED_HOSTS = ["127.0.0.1", ".vercel.app"]
 CORS_ALLOW_ALL_ORIGINS = True 
 
 CORS_ALLOWED_ORIGINS = [
-    "https://flower-seal-backend.vercel.app",
-    "https://flower-seal.netlify.app",
+    "http://127.0.0.1:8000",
+    "http://127.0.0.1:5500",
 ]
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'pass_change',
     'orders',
     'admins',
-    'payment',
+    'payments',
     'rest_framework.authtoken',
     'corsheaders',
     'django_filters',

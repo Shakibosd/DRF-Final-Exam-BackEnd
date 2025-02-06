@@ -16,11 +16,14 @@ from django.core.mail import send_mail
 from .serializers import ContactFormSerializer
 from .models import PlantRevivalTip
 from .serializers import FlowerCareTipSerializer
+import logging
+logger = logging.getLogger(__name__)
 
 #eta hocce amar flower gula show kore deka and flower gula details kore deka
 class FlowerViewSet(viewsets.ModelViewSet):
     queryset = Flower.objects.all()
     serializer_class = FlowerSerializer
+
 
 class FlowerDetail(APIView):
     def get_object(self, pk):
@@ -89,6 +92,7 @@ class CommentAPIView(APIView):
             return Response({"error": "Comment not found"}, status=status.HTTP_404_NOT_FOUND)
 
 #ekane check kora hocce user flower by now korese ki jodi by now kore thake tahole flower er modde comment korte parbe
+
 class CommentCheckOrderAPIView(APIView):
     def get(self, request, *args, **kwargs):
         serializer = CommentCheckOrderSerializer(data=request.query_params)
@@ -97,7 +101,12 @@ class CommentCheckOrderAPIView(APIView):
             user = request.user
             flower = get_object_or_404(Flower, id=flowerId)
 
-            order_exists = Order.objects.filter(user=user, flower=flower).exists()
+            # Log user, flower, and query result
+            logger.info(f"User: {user}, Flower: {flower}")
+            orders = Order.objects.filter(user=user, flower=flower)
+            logger.info(f"Orders found: {orders.exists()}")
+
+            order_exists = orders.exists()
 
             return Response({"order_exists": order_exists}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -15,7 +15,6 @@ class Flower(models.Model):
 
 class Comment(models.Model):
     flower = models.ForeignKey(Flower, on_delete=models.CASCADE)
-    # name = models.CharField(max_length=200)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     body = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
