@@ -123,13 +123,17 @@ class ContactFormView(APIView):
             subject = f"Contact Form Submission from {name}"
             email_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
 
-            send_mail(
-                subject,
-                email_message,
-                ['syednazmusshakib94@gmail.com'],  
-                fail_silently=False,
-            )
-            return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+            try:
+                send_mail(
+                    subject,
+                    email_message,
+                    'noreply@yourdomain.com',  
+                    ['syednazmusshakib94@gmail.com'],
+                    fail_silently=False,
+                )
+                return Response({"message": "Email sent successfully"}, status=status.HTTP_200_OK)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
