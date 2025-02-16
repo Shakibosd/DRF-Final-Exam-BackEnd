@@ -121,7 +121,7 @@ class ContactFormView(APIView):
             message = serializer.validated_data['message']
             
             subject = f"Contact Form Submission from {name}"
-            email_message = f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}"
+            email_message = f"Name : {name}\nEmail : {email}\nMessage : \n{message}"
 
             try:
                 send_mail(
