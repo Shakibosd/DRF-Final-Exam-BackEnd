@@ -87,15 +87,14 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'flower_seal.wsgi.app'
 
-
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres.bktrteinanfzuwmgmlzt',
-        'PASSWORD': 'rYShla8V166Rdzc5',
-        'HOST': 'aws-0-us-east-1.pooler.supabase.com',
-        'PORT': '6543'
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
     }
 }
 
