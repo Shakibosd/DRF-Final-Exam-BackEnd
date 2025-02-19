@@ -99,6 +99,13 @@ DATABASES = {
     }
 }
 
+SSL_COMMERZ = {
+    'store_id': env('STORE_ID'),
+    'store_pass': env('STORE_PASS'),
+    'issandbox': env.bool('ISSANDBOX', default=True)
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
