@@ -1,23 +1,30 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
-from .views import FlowerViewSet, FlowerDetail, CommentViewSet, CommentAPIView, CommentShowAPIView, CommentCheckOrderAPIView,ContactFormView, FlowerCareTipViewSet, CommentEditAPIView, CartApiView
+from django.urls import path
+from .views import (
+    FlowerListAPIView, FlowerDetailAPIView, FlowerCareTipAPIView, CommentAPIView, 
+    CommentShowAPIView, CommentCheckOrderAPIView, ContactFormView, 
+    CommentEditAPIView, CartApiView
+)
 
-router = DefaultRouter()
-router.register('flowers', FlowerViewSet, basename='flowers')
-router.register('comments', CommentViewSet, basename='comments')
-router.register('care-tips', FlowerCareTipViewSet, basename='care-tips')
-
-
+# URL Patterns
 urlpatterns = [
-    path('', include(router.urls)),
-    path('flowers/', FlowerDetail.as_view(), name='flower_details'),
-    path('flowers/<int:pk>/', FlowerDetail.as_view(), name='flower_details'),
-    path('comments_api/', CommentAPIView.as_view(), name='comments_api'),
-    path('comments_api/<int:commentId>/', CommentAPIView.as_view(), name='comments_api'),
-    path('get_comment/<int:postId>/', CommentShowAPIView.as_view(), name='get_comment'),
-    path('check_order/', CommentCheckOrderAPIView.as_view(), name='check_order'),
+    # Flower APIs
+    path('flower_all/', FlowerListAPIView.as_view(), name='flower-list'),
+    path('flower_detail/<int:pk>/', FlowerDetailAPIView.as_view(), name='flower-detail'),
+
+    # Comment APIs
+    path('comment_all/', CommentAPIView.as_view(), name='comments-api'),
+    path('comment_delete/<int:commentId>/', CommentAPIView.as_view(), name='comment-delete'),
+    path('comment_show/<int:postId>/', CommentShowAPIView.as_view(), name='get-comment'),
+    path('comment_check_order/', CommentCheckOrderAPIView.as_view(), name='check-order'),
+    path('comment_edit/<int:commentId>/', CommentEditAPIView.as_view(), name='comment-edit'),
+
+    # Contact Form
     path('contact/', ContactFormView.as_view(), name='contact-form'),
-    path('comments/edit/<int:commentId>/', CommentEditAPIView.as_view(), name='comment-edit'),
+
+    # Flower Care Tips
+    path('care_tips/', FlowerCareTipAPIView.as_view(), name='flower-care-tips'),
+
+    # Cart APIs
     path('cart/', CartApiView.as_view(), name='cart'),
-    path('cart/<int:cart_id>/', CartApiView.as_view(), name='cart_remove'),
+    path('cart_remove/<int:cart_id>/', CartApiView.as_view(), name='cart-remove'),
 ]

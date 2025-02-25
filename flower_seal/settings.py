@@ -22,6 +22,7 @@ CORS_ALLOW_ALL_ORIGINS = True
 
 # Application definition
 INSTALLED_APPS = [
+    #whitenoise
     'whitenoise.runserver_nostatic', 
     #pre
     'django.contrib.admin',
@@ -30,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
      #  third-party
     'rest_framework',
     'users',
@@ -40,8 +42,7 @@ INSTALLED_APPS = [
     'payments',
     'rest_framework.authtoken',
     'corsheaders',
-    'django_filters',
-    'django.contrib.sites',
+    'django_filters', 
 ]
 
 REST_FRAMEWORK = {

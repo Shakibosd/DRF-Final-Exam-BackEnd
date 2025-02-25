@@ -12,10 +12,8 @@ from django.views.decorators.csrf import csrf_exempt
 
 class SSLCommerzFlowerPaymentView(APIView):
     def get(self, request, flower_id, *args, **kwargs):
-        # Get the Flower object based on flower_id
         flower = get_object_or_404(Flower, id=flower_id)
-
-        # Generate a unique transaction ID
+    
         transaction_id = str(uuid.uuid4())
 
         # SSLCommerz payment request data
@@ -40,7 +38,6 @@ class SSLCommerzFlowerPaymentView(APIView):
             'product_profile': 'general',
         }
 
-        # SSLCommerz API URL (sandbox or live)
         url = 'https://sandbox.sslcommerz.com/gwprocess/v4/api.php' if settings.SSL_COMMERZ['issandbox'] \
             else 'https://securepay.sslcommerz.com/gwprocess/v4/api.php'
 
@@ -49,7 +46,6 @@ class SSLCommerzFlowerPaymentView(APIView):
         if response.status_code == 200:
             res_data = response.json()
             if res_data.get('status') == 'SUCCESS':
-                # Redirect directly to SSLCommerz Payment Page
                 return redirect(res_data['GatewayPageURL'])
             else:
                 return Response({'error': 'SSLCommerz payment failed'}, status=status.HTTP_400_BAD_REQUEST)

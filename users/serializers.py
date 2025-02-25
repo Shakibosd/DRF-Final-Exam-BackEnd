@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
+from .utils import generate_otp
 from .models import Profile
+from django.core.mail import send_mail
 
 class UserSerializer(serializers.ModelSerializer):
     profile_img = serializers.CharField(source='profile.profile_img', read_only=True)
@@ -40,9 +42,16 @@ class RegistrationSerializer(serializers.ModelSerializer):
         user.is_active = False 
         user.save()
 
-        Profile.objects.create(
-            user=user,
-            profile_img=profile_img,
+        otp_code = generate_otp()
+        Profile.objects.create(user=user, profile_img=profile_img, otp=otp_code)
+
+        email_subject = 'Your OTP Code : '
+        email_body = f'Your OTP Code Is : {otp_code}'
+        send_mail(
+            email_subject,
+            email_body,
+            'syednazmusshakib94@gmail.com', 
+            [user.email]
         )
         
         return user

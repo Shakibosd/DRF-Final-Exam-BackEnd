@@ -70,19 +70,6 @@ class OrderView(APIView):
         return Response({'error': 'Invalid data', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
-class OrderSummaryAPIView(APIView):
-    def get(self, request, *args, **kwargs):
-        total_products_sold = Order.objects.aggregate(total_quantity=models.Sum('quantity'))['total_quantity'] or 0
-        total_revenue = Order.objects.aggregate(total_revenue=models.Sum('revenue'))['total_revenue'] or 0.0
-        total_profit = Order.objects.aggregate(total_profit=models.Sum('profit'))['total_profit'] or 0.0
-        
-        return Response({
-            'total_products_sold': total_products_sold,
-            'total_revenue': total_revenue,
-            'total_profit': total_profit
-        })
-
-
 class AllUsersOrderHistoryAPIView(APIView):
     def get(self, request, *args, **kwargs):
         orders = Order.objects.all()
