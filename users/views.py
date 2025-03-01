@@ -131,11 +131,19 @@ class LoginAPIView(APIView):
 
             if user:
                 token, _ = Token.objects.get_or_create(user=user)
-        
                 login(request, user)
-                return Response({'token': token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
+
+                return Response({
+                    'token': token.key,
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email, 
+                    }
+                }, status=status.HTTP_200_OK)
             
             return Response({'error': 'Invalid Credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
 
 #user logout korar jonno
 class LogoutAPIView(APIView):
