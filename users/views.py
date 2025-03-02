@@ -36,22 +36,13 @@ class UserAPIView(APIView):
 
     def put(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        profile = get_object_or_404(Profile, user=user)
+        serializer = UserSerializer(user, data=request.data, partial=True)
 
-        user_serializer = UserSerializer(user, data=request.data, partial=True)
-        if user_serializer.is_valid():
-            user_serializer.save()
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
 
-        profile_data = request.data.get('profile', {})
-        profile.profile_img = profile_data.get('profile_img', profile.profile_img)
-        profile.save()
-
-        return Response(user_serializer.data)
-
-    def delete(self, request, pk):
-        user = get_object_or_404(User, pk=pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #user register korar jonno
 class RegisterAPIView(APIView):
