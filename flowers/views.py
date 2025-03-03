@@ -139,7 +139,6 @@ class FlowerCareTipAPIView(APIView):
 # Cart API
 class CartApiView(APIView):
     def get(self, request):
-        print('Crunnent User : ',request.user)
         cart_items = CartItem.objects.filter(user=request.user)
         serializer = CartItemSerializer(cart_items, many=True)
         return Response(serializer.data)
