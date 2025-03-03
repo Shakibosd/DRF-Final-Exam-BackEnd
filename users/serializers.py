@@ -23,7 +23,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
-    
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
