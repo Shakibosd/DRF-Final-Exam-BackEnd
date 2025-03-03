@@ -15,38 +15,20 @@ from rest_framework.parsers import MultiPartParser, FormParser
 
 #user dekar jonno
 class UserAPIView(APIView):
-    parser_classes = (MultiPartParser, FormParser)
-
-    def get(self, request, pk=None):
-        if pk:
-            user = get_object_or_404(User, pk=pk)
-            serializer = UserSerializer(user) 
-        else:
-            users = User.objects.all()
-            serializer = UserSerializer(users, many=True)
-        return Response(serializer.data)
-
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    parser_classes = (MultiPartParser, FormParser) 
 
     def put(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
-            profile_data = request.data.get('profile', {})
-
-            # Profile image update manually
             profile_instance = user.profile
-            if 'profile_img' in request.FILES: 
+
+            if 'profile_img' in request.FILES:
                 profile_instance.profile_img = request.FILES['profile_img']
                 profile_instance.save()
 
-            serializer.save()
+            serializer.save()  
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

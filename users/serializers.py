@@ -20,7 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             profile.save() 
             
         for attr, value in validated_data.items():
-            setattr(instance, attr, value)
+            setattr(instance, attr, value)  
         instance.save()  
 
         instance.refresh_from_db()  
