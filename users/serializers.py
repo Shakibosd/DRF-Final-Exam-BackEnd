@@ -5,7 +5,7 @@ from .models import Profile
 from django.core.mail import send_mail
 
 class UserSerializer(serializers.ModelSerializer):
-    profile_img = serializers.CharField(source='profile.profile_img', required=False)
+    profile_img = serializers.ImageField(source='profile.profile_img', required=False)
 
     class Meta:
         model = User
@@ -19,19 +19,18 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', {}) 
-        profile = instance.profile
+        profile_img = validated_data.pop('profile_img', None)
 
-        if 'profile_img' in profile_data:
-            profile.profile_img = profile_data['profile_img']
-            profile.save()
+        if profile_img:
+            instance.profile.profile_img = profile_img
+            instance.profile.save()
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
         return instance
-
+    
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)

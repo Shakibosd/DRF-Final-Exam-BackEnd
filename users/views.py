@@ -14,10 +14,12 @@ from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
 from .utils import generate_otp
 from django.core.mail import send_mail
-from django.urls import reverse
+from rest_framework.parsers import MultiPartParser, FormParser
 
 #user dekar jonno
 class UserAPIView(APIView):
+    parser_classes = (MultiPartParser, FormParser) 
+
     def get(self, request, pk=None):
         if pk:
             user = get_object_or_404(User, pk=pk)
@@ -40,7 +42,7 @@ class UserAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
