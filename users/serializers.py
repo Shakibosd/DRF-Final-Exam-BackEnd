@@ -15,8 +15,8 @@ class UserSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile', {})  
         profile = instance.profile
 
-        if 'profile_img' in validated_data:  # এটা পরিবর্তন করেছি
-            profile.profile_img = validated_data['profile_img']
+        if 'profile_img' in profile_data:
+            profile.profile_img = profile_data['profile_img']
             profile.save()
 
         for attr, value in validated_data.items():
