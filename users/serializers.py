@@ -19,15 +19,13 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', {})  # Profile Data Extract করা
+        profile_data = validated_data.pop('profile', {}) 
         profile = instance.profile
 
-        # Profile Image Update করা
         if 'profile_img' in profile_data:
             profile.profile_img = profile_data['profile_img']
             profile.save()
 
-        # User Data Update করা
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
