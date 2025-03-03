@@ -39,17 +39,10 @@ class UserAPIView(APIView):
         serializer = UserSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
-            profile_instance = user.profile
-
-            if 'profile_img' in request.FILES:
-                profile_instance.profile_img = request.FILES['profile_img']
-                profile_instance.save()
-
-            serializer.save()  
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer.save()
+            return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 #user register korar jonno
 class RegisterAPIView(APIView):
