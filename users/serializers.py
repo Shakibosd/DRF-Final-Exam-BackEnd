@@ -10,22 +10,28 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile_img']
+        extra_kwargs = {
+            'password': {'write_only': True}
+        }
+
+    def create(self, validated_data):
+        user = User.objects.create_user(**validated_data)
+        return user
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', {})  
-        profile = instance.profile  
+        profile_data = validated_data.pop('profile', {}) 
+        profile = instance.profile
 
         if 'profile_img' in profile_data:
             profile.profile_img = profile_data['profile_img']
-            profile.save() 
-            
-        for attr, value in validated_data.items():
-            setattr(instance, attr, value)  
-        instance.save()  
+            profile.save()
 
-        instance.refresh_from_db()  
-        return instance  
-    
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.save()
+
+        return instance
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)

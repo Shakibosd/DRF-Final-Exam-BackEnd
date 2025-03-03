@@ -3,6 +3,9 @@ from rest_framework.authtoken.models import Token
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth.tokens import default_token_generator
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
@@ -11,28 +14,35 @@ from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
 from .utils import generate_otp
 from django.core.mail import send_mail
-from rest_framework.parsers import MultiPartParser, FormParser
+from django.urls import reverse
 
 #user dekar jonno
 class UserAPIView(APIView):
-    parser_classes = (MultiPartParser, FormParser) 
+    def get(self, request, pk=None):
+        if pk:
+            user = get_object_or_404(User, pk=pk)
+            serializer = UserSerializer(user) 
+        else:
+            users = User.objects.all()
+            serializer = UserSerializer(users, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
         user = get_object_or_404(User, pk=pk)
         serializer = UserSerializer(user, data=request.data, partial=True)
 
         if serializer.is_valid():
-            profile_instance = user.profile
-
-            if 'profile_img' in request.FILES:
-                profile_instance.profile_img = request.FILES['profile_img']
-                profile_instance.save()
-
-            serializer.save()  
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            serializer.save()
+            return Response(serializer.data)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 #user register korar jonno
 class RegisterAPIView(APIView):
