@@ -12,7 +12,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile_img']
 
     def update(self, instance, validated_data):
-        profile_img = self.context['request'].FILES.get('profile_img')  
+        profile_img = self.context['request'].FILES.get('profile_img')
+
         if profile_img:
             instance.profile.profile_img = profile_img
             instance.profile.save()
