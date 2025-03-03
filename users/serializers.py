@@ -15,7 +15,6 @@ class UserSerializer(serializers.ModelSerializer):
         profile_data = validated_data.pop('profile', {})  
         profile = instance.profile
 
-        # এখানে profile_img ডাটাবেজে সেভ করা হচ্ছে
         if 'profile_img' in profile_data:  
             profile.profile_img = profile_data['profile_img']
             profile.save()
