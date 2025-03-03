@@ -12,11 +12,11 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile_img']
 
     def update(self, instance, validated_data):
-        profile_data = validated_data.pop('profile', {}) 
+        profile_data = validated_data.pop('profile', {})  
         profile = instance.profile
 
-        if 'profile_img' in validated_data:
-            profile.profile_img = validated_data['profile_img']  
+        if 'profile_img' in validated_data:  # এটা পরিবর্তন করেছি
+            profile.profile_img = validated_data['profile_img']
             profile.save()
 
         for attr, value in validated_data.items():
@@ -24,6 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         instance.save()
 
         return instance
+
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
