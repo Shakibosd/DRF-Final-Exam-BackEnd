@@ -13,15 +13,17 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile', {})  
-        profile = instance.profile
+        profile = instance.profile  
 
-        if 'profile_img' in profile_data:  
+        if 'profile_img' in profile_data:
             profile.profile_img = profile_data['profile_img']
             profile.save()
 
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
+
+        instance.refresh_from_db()
 
         return instance
 
