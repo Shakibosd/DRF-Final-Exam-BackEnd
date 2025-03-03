@@ -45,7 +45,7 @@ class UserAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 #user register korar jonno
 class RegisterAPIView(APIView):
     serializer_class = RegistrationSerializer

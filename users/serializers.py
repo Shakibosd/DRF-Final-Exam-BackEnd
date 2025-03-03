@@ -13,7 +13,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         profile_img = self.context['request'].FILES.get('profile_img')  
-
         if profile_img:
             instance.profile.profile_img = profile_img
             instance.profile.save()
