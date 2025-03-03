@@ -17,15 +17,14 @@ class UserSerializer(serializers.ModelSerializer):
 
         if 'profile_img' in profile_data:
             profile.profile_img = profile_data['profile_img']
-            profile.save()
-
+            profile.save() 
+            
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
-        instance.save()
+        instance.save()  
 
-        instance.refresh_from_db()
-
-        return instance
+        instance.refresh_from_db()  
+        return instance  
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
