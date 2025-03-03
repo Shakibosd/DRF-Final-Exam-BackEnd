@@ -10,21 +10,14 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile_img']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
-
-    def create(self, validated_data):
-        user = User.objects.create_user(**validated_data)
-        return user
 
     def update(self, instance, validated_data):
-        profile_img = validated_data.pop('profile_img', None)
+        profile_img = self.context['request'].FILES.get('profile_img')
 
         if profile_img:
             instance.profile.profile_img = profile_img
             instance.profile.save()
-
+        
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()

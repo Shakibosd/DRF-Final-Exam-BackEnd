@@ -38,14 +38,14 @@ class UserAPIView(APIView):
 
     def put(self, request, pk):
         user = get_object_or_404(User, pk=pk)
-        serializer = UserSerializer(user, data=request.data, partial=True)
+        serializer = UserSerializer(user, data=request.data, partial=True, context={'request': request})
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
 #user register korar jonno
 class RegisterAPIView(APIView):
     serializer_class = RegistrationSerializer
