@@ -25,7 +25,7 @@ class UserSerializer(serializers.ModelSerializer):
 
         instance.refresh_from_db()  
         return instance  
-
+    
 
 class RegistrationSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(write_only=True)
