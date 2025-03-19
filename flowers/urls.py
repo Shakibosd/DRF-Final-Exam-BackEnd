@@ -14,9 +14,9 @@ urlpatterns = [
     # Comment APIs
     path('comment_all/', CommentAPIView.as_view(), name='comments-api'),
     path('comment_delete/<int:commentId>/', CommentAPIView.as_view(), name='comment-delete'),
-    path('comment_show/<int:postId>/', CommentShowAPIView.as_view(), name='get-comment'),
-    path('comment_check_order/', CommentCheckOrderAPIView.as_view(), name='check-order'),
+    path('comment_show/<int:flowerId>/', CommentShowAPIView.as_view(), name='get-comment'),
     path('comment_edit/<int:commentId>/', CommentEditAPIView.as_view(), name='comment-edit'),
+    path('comment_check_order/', CommentCheckOrderAPIView.as_view(), name='check-order'),
 
     # Contact Form
     path('contact/', ContactFormView.as_view(), name='contact-form'),

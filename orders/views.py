@@ -5,13 +5,17 @@ from rest_framework.views import APIView
 from django.shortcuts import get_object_or_404
 from .models import Order
 from flowers.models import Flower
-from .serializers import OrderSerializer, OrderCreateSerializer, OrderSerializerForCreate
+from .serializers import OrderSerializer, OrderCreateSerializer
 from .constants import PENDING, COMPLETED
-from django.core.mail import EmailMultiAlternatives
-from django.template.loader import render_to_string
 from .models import Order
 from .serializers import OrderSerializer
-from django.db import models
+import logging
+import uuid
+logger = logging.getLogger(__name__)
+from django.core.mail import send_mail
+from django.conf import settings
+from django.db.models import Sum, F
+from decimal import Decimal
 
 #eta hocce flower order korar jonno post and get
 class OrderAPIView(APIView): 
@@ -21,52 +25,59 @@ class OrderAPIView(APIView):
         return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
-        serializer = OrderCreateSerializer(data=request.data)
+        serializer = OrderCreateSerializer(data=request.data, context={'request': request})
         if serializer.is_valid():
-            serializer.save(user=request.user)
+            serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 
 #eta hocce order history dekar jonno and order view dekar jonno and flower kinar pore email jabe and flower buy korle quentity kome jabe
 class OrderView(APIView):
     def post(self, request, *args, **kwargs):
-        serializer = OrderSerializerForCreate(data=request.data)
+        serializer = OrderCreateSerializer(data=request.data)
         if serializer.is_valid():
             user = request.user
-            product_id = serializer.validated_data['product_id']
+            flower_id = serializer.validated_data['flower'].id  
             quantity = serializer.validated_data['quantity']
-            flower = get_object_or_404(Flower, id=product_id)
+            flower = get_object_or_404(Flower, id=flower_id)  
 
             if flower.stock < quantity:
                 return Response({'error': 'Insufficient stock available'}, status=status.HTTP_400_BAD_REQUEST)
 
             try:
                 order = Order.objects.create(
-                    user=user,
+                    user=request.user,
                     flower=flower,
                     quantity=quantity,
-                    status='Pending',
+                    status='Pending',  
+                    transaction_id=str(uuid.uuid4())  
                 )
                 flower.stock -= quantity
                 flower.save()
 
-                # Sending email
-                email_subject = 'Order Confirmation'
-                email_body = render_to_string('order_confirmation_email.html', {
-                    'user': user,
-                    'flower': flower,
-                    'quantity': quantity,
-                    'order': order,
-                })
-                email = EmailMultiAlternatives(email_subject, '', to=[user.email])
-                email.attach_alternative(email_body, 'text/html')
-                email.send()
+                subject = "Thank You For Your Order!"
+                message = f"""
+                Dear {user.username}
 
-                return Response({'status': 'Order Placed Successfully. Check Your Email'}, status=status.HTTP_201_CREATED)
+                Your order has been successfully placed. Here are the details :
+
+                -Product : {flower.title}
+                -Quantity : {flower.quantity}
+                -Order Id : {flower.id}
+
+                We will notify you once your order is shipped.
+
+                Thank you for shopping with us!
+                """ 
+
+                send_mail(subject, message, settings.EMAIL_HOST_USER, [user.email], fail_silently=False)
+
+                return Response({'status': 'Order Placed Successfully'}, status=status.HTTP_201_CREATED)
             except Exception as e:
-                logger.error(f"Error creating order or sending email: {e}")
+                logger.error(f"Error creating order: {e}")
                 return Response({'error': 'Order creation failed'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
         return Response({'error': 'Invalid data', 'details': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 
@@ -76,3 +87,56 @@ class AllUsersOrderHistoryAPIView(APIView):
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
+
+#one user order data
+class OneUserOrderStatsAPIView(APIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        total_orders = Order.objects.filter(user=user).count()
+        completed_payments = Order.objects.filter(user=user, status='Completed').count()
+        pending_payments = Order.objects.filter(user=user, status='Pending').count()
+
+        total_payment_amount = Order.objects.filter(user=user,status='Completed').aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
+
+        total_order_amount = Order.objects.filter(user=user).aggregate(
+            total=Sum(F('flower__price') * F('quantity'))
+        )['total'] or Decimal("0.00")
+
+        data = {
+            "total_orders": total_orders,
+            "completed_payments": completed_payments,
+            "pending_payments": pending_payments,  
+            "total_payment_amount": total_payment_amount,  
+            "total_order_amount": total_order_amount,  
+        }
+        return Response(data, status=status.HTTP_200_OK)
+    
+
+#all user order data
+class UserOrderStatusAPIView(APIView):
+
+    def get(self, request, *args, **kwargs):
+
+        total_orders = Order.objects.count()
+
+        comopleted_payment = Order.objects.filter(status='Completed').count()
+
+        pending_payment = Order.objects.filter(status='Pending').count()
+
+        total_payment_amount = Order.objects.filter(status='Completed').aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
+
+        total_order_amount = Order.objects.filter().aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
+
+        total_profit = total_payment_amount * Decimal('0.10')
+
+        data = {
+            'Total_Orders' : total_orders,
+            'Completed_Payments' : comopleted_payment,
+            'Pending_Payments' : pending_payment,
+            'Total Payments Amount' : total_payment_amount,
+            'Total Order Amount': total_order_amount,
+            'Total Profit' : total_profit
+        }
+
+        return Response(data, status=status.HTTP_200_OK)

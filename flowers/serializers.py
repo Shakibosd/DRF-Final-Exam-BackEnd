@@ -1,13 +1,14 @@
 from rest_framework import serializers
 from .models import Flower, Comment, PlantRevivalTip, CartItem
 from django.contrib.auth.models import User
+from .models import Comment
+from users.models import Profile
 
 class FlowerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Flower
         fields = ['id', 'title', 'description', 'price', 'image', 'category', 'stock']
         read_only_fields = ['id']
-
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,12 +17,21 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class CommentsSerializer(serializers.ModelSerializer):
-    user = serializers.StringRelatedField()
-    flower = serializers.StringRelatedField()
-    user = UserSerializer() 
+    user = serializers.StringRelatedField(read_only=True) 
+    flower = serializers.PrimaryKeyRelatedField(queryset=Flower.objects.all())  
+    profile_img = serializers.SerializerMethodField()
+
     class Meta:
         model = Comment
-        fields = '__all__'
+        fields = ['id', 'user', 'flower', 'body', 'created_on', 'profile_img']
+        read_only_fields = ['user', 'created_on'] 
+
+    def get_profile_img(self, obj):
+        try:
+            profile = Profile.objects.get(user=obj.user)  
+            return profile.profile_img  
+        except Profile.DoesNotExist:
+            return None  
 
         
 class CommentSerializer(serializers.Serializer):
@@ -40,7 +50,7 @@ class CommentEditSerializer(serializers.ModelSerializer):
 
 
 class CommentCheckOrderSerializer(serializers.Serializer):
-    flowerId = serializers.IntegerField(required=True)
+    flower_id = serializers.IntegerField(required=True)  
     
 
 class ContactFormSerializer(serializers.Serializer):

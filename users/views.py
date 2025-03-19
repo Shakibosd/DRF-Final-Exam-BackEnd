@@ -10,29 +10,21 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .serializers import UserSerializer, RegistrationSerializer, LoginSerializer
+from .serializers import  UserSerializer, RegistrationSerializer, LoginSerializer
 from django.shortcuts import get_object_or_404
 from .utils import generate_otp
 from django.core.mail import send_mail
-from django.urls import reverse
 
 #user dekar jonno
 class UserAPIView(APIView):
     def get(self, request, pk=None):
         if pk:
             user = get_object_or_404(User, pk=pk)
-            serializer = UserSerializer(user) 
+            serializer = UserSerializer(user)
         else:
             users = User.objects.all()
             serializer = UserSerializer(users, many=True)
         return Response(serializer.data)
-
-    def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def put(self, request, pk):
         user = get_object_or_404(User, pk=pk)
@@ -42,6 +34,13 @@ class UserAPIView(APIView):
             serializer.save()
             return Response(serializer.data)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def post(self, request):
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #user register korar jonno
@@ -69,6 +68,7 @@ class RegisterAPIView(APIView):
             return Response({'detail': 'Check your email for confirmation'}, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 #send opt
 class ResendOTPApiView(APIView):

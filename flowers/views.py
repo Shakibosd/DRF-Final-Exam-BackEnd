@@ -52,6 +52,7 @@ class FlowerDetailAPIView(APIView):
 
 # Comment API
 class CommentAPIView(APIView):
+    
     def post(self, request):
         serializer = CommentsSerializer(data=request.data)
         if serializer.is_valid():
@@ -60,31 +61,22 @@ class CommentAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, commentId):
-        comment = get_object_or_404(Comment, id=commentId, user=request.user)
+        comment = get_object_or_404(Comment, id=commentId)
+        
+        if comment.user != request.user:
+            return Response({"message": "Unauthorized"}, status=status.HTTP_403_FORBIDDEN)
+        
         comment.delete()
-        return Response({"message": "Comment deleted successfully"}, status=status.HTTP_200_OK)
+        return Response({"message": "Comment deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
 
 
 class CommentShowAPIView(APIView):
-    def get(self, request, postId):
-        flower = get_object_or_404(Flower, id=postId)
+    def get(self, request, flowerId):
+        flower = get_object_or_404(Flower, id=flowerId)
         comments = Comment.objects.filter(flower=flower)
         serializer = CommentsSerializer(comments, many=True)
         return Response(serializer.data)
-
-
-class CommentCheckOrderAPIView(APIView):
-    def get(self, request):
-        serializer = CommentCheckOrderSerializer(data=request.query_params)
-        if serializer.is_valid():
-            flowerId = serializer.validated_data['flowerId']
-            user = request.user
-            flower = get_object_or_404(Flower, id=flowerId)
-            order_exists = Order.objects.filter(user=user, flower=flower).exists()
-            return Response({"order_exists": order_exists}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
+    
 class CommentEditAPIView(APIView):
     def get(self, request, postId):
         flower = get_object_or_404(Flower, id=postId)
@@ -100,6 +92,19 @@ class CommentEditAPIView(APIView):
             return Response({"message": "Comment updated successfully!"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CommentCheckOrderAPIView(APIView):
+    def get(self, request):
+        print("Query Params:", request.query_params)  
+        serializer = CommentCheckOrderSerializer(data=request.query_params)
+        if serializer.is_valid():
+            flower_id = serializer.validated_data['flower_id']
+            print("Validated Flower ID:", flower_id)
+            user = request.user
+            flower = get_object_or_404(Flower, id=flower_id)
+            order_exists = Order.objects.filter(user=user, flower=flower).exists()
+            return Response({"can_comment": order_exists}, status=status.HTTP_200_OK)
+        print("Serializer Errors:", serializer.errors)  
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Contact Form API
 class ContactFormView(APIView):

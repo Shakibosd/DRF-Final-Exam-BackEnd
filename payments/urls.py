@@ -1,12 +1,8 @@
 from django.urls import path
-from .views import SSLCommerzFlowerPaymentView
-from payments import views
+from .views import SSLCommerzFlowerPaymentView, payment_success, payment_fail
+
 urlpatterns = [
     path('payment_detail/<int:flower_id>/', SSLCommerzFlowerPaymentView.as_view(), name='sslcommerz_payment'),
-
-    path('payment_success/', views.payment_success, name='payment_success'),
-
-    path('payment_fail/', views.payment_fail, name='payment_fail'),
-
-    path('payment_cancel/', views.payment_cancel, name='payment_cancel'),
+    path('payment_success/', payment_success, name='payment_success'),
+    path('payment_fail/', payment_fail, name='payment_fail'),
 ]
