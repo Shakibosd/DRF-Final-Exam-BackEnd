@@ -93,23 +93,24 @@ class OneUserOrderStatsAPIView(APIView):
     def get(self, request, *args, **kwargs):
         user = request.user
 
-        total_orders = Order.objects.filter(user=user).count()
-        completed_payments = Order.objects.filter(user=user, status='Completed').count()
-        pending_payments = Order.objects.filter(user=user, status='Pending').count()
+        total_orders = Order.objects.count()
 
-        total_payment_amount = Order.objects.filter(user=user,status='Completed').aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
+        comopleted_payment = Order.objects.filter(user=user, status='Completed').count()
 
-        total_order_amount = Order.objects.filter(user=user).aggregate(
-            total=Sum(F('flower__price') * F('quantity'))
-        )['total'] or Decimal("0.00")
+        pending_payment = Order.objects.filter(user=user, status='Pending').count()
+
+        total_payment_amount = Order.objects.filter(user=user, status='Completed').aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
+
+        total_order_amount = Order.objects.filter(user=user).aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
 
         data = {
-            "total_orders": total_orders,
-            "completed_payments": completed_payments,
-            "pending_payments": pending_payments,  
-            "total_payment_amount": total_payment_amount,  
-            "total_order_amount": total_order_amount,  
+            'Total_Orders' : total_orders,
+            'Completed_Payments' : comopleted_payment,
+            'Pending_Payments' : pending_payment,
+            'Total Payments Amount' : total_payment_amount,
+            'Total Order Amount': total_order_amount,
         }
+
         return Response(data, status=status.HTTP_200_OK)
     
 
