@@ -16,6 +16,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.db.models import Sum, F
 from decimal import Decimal
+from rest_framework.permissions import IsAuthenticated
 
 #eta hocce flower order korar jonno post and get
 class OrderAPIView(APIView): 
@@ -90,12 +91,17 @@ class AllUsersOrderHistoryAPIView(APIView):
 
 #one user order data
 class OneUserOrderStatsAPIView(APIView):
+    permission_classes = [IsAuthenticated] 
+
     def get(self, request, *args, **kwargs):
         user = request.user
 
-        total_orders = Order.objects.count()
+        if not user.is_authenticated:
+            return Response({"error": "Authentication required"}, status=status.HTTP_401_UNAUTHORIZED)
 
-        comopleted_payment = Order.objects.filter(user=user, status='Completed').count()
+        total_orders = Order.objects.filter(user=user).count()
+
+        completed_payment = Order.objects.filter(user=user, status='Completed').count()
 
         pending_payment = Order.objects.filter(user=user, status='Pending').count()
 
@@ -104,15 +110,14 @@ class OneUserOrderStatsAPIView(APIView):
         total_order_amount = Order.objects.filter(user=user).aggregate(total=Sum('flower__price'))['total'] or Decimal('0.00')
 
         data = {
-            'Total_Orders' : total_orders,
-            'Completed_Payments' : comopleted_payment,
-            'Pending_Payments' : pending_payment,
-            'Total Payments Amount' : total_payment_amount,
+            'Total_Orders': total_orders,
+            'Completed_Payments': completed_payment,
+            'Pending_Payments': pending_payment,
+            'Total Payments Amount': total_payment_amount,
             'Total Order Amount': total_order_amount,
         }
 
         return Response(data, status=status.HTTP_200_OK)
-    
 
 #all user order data
 class UserOrderStatusAPIView(APIView):
