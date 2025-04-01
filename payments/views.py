@@ -61,7 +61,7 @@ def payment_success(request, *args, **kwargs):
             order.transaction_id = tran_id  
             order.save()
             messages.success(request, "Payment successfully completed!")  
-    return redirect('https://moonlit-licorice-572351.netlify.app/order_history')
+    return redirect('https://flower-sell.netlify.app/order_history')
 
 
 @csrf_exempt
@@ -70,6 +70,6 @@ def payment_fail(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)  
     if flower_id:
         messages.error(request, "Payment failed! Please try again.")
-        return redirect(f'https://moonlit-licorice-572351.netlify.app/flower_details/?flower_id={flower_id}')
+        return redirect(f'https://flower-sell.netlify.app/flower_details/?flower_id={flower_id}')
     else:
-        return redirect('https://moonlit-licorice-572351.netlify.app/auth_home')
+        return redirect('https://flower-sell.netlify.app/auth_home')
