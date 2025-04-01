@@ -21,8 +21,8 @@ class SSLCommerzFlowerPaymentView(APIView):
             'total_amount': float(flower.price),
             'currency': 'BDT',
             'tran_id': transaction_id,
-            'success_url': f"http://127.0.0.1:8000/api/v1/payments/payment_success/",
-            'fail_url': f"http://127.0.0.1:8000/api/v1/payments/payment_fail/?id={flower.id}",
+            'success_url': f"https://flower-seal-backend.vercel.app/api/v1/payments/payment_success/",
+            'fail_url': f"https://flower-seal-backend.vercel.app/api/v1/payments/payment_fail/?id={flower.id}",
             'cus_name': 'Test User',
             'cus_email': 'test@example.com',
             'cus_phone': '01700000000',
@@ -52,15 +52,16 @@ class SSLCommerzFlowerPaymentView(APIView):
 @csrf_exempt
 def payment_success(request, *args, **kwargs):
     print("Payment Success POST Data:", request.POST)  
-    tran_id = request.POST.get('tran_id', None)
+    tran_id = request.POST.get('tran_id') or request.GET.get('tran_id')
     if tran_id:
         order = Order.objects.filter(status='Pending', transaction_id=None).first()
         if order:
             order.status = 'Completed'
+            print(order.status)
             order.transaction_id = tran_id  
             order.save()
             messages.success(request, "Payment successfully completed!")  
-    return redirect('http://localhost:5173/order_history')
+    return redirect('https://moonlit-licorice-572351.netlify.app/order_history')
 
 
 @csrf_exempt
@@ -69,6 +70,6 @@ def payment_fail(request, *args, **kwargs):
     flower_id = request.GET.get('id', None)  
     if flower_id:
         messages.error(request, "Payment failed! Please try again.")
-        return redirect(f'http://localhost:5173/flower_details/?flower_id={flower_id}')
+        return redirect(f'https://moonlit-licorice-572351.netlify.app/flower_details/?flower_id={flower_id}')
     else:
-        return redirect('http://localhost:5173/auth_home')
+        return redirect('https://moonlit-licorice-572351.netlify.app/auth_home')

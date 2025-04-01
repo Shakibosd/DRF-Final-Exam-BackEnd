@@ -52,7 +52,7 @@ class OrderView(APIView):
                     flower=flower,
                     quantity=quantity,
                     status='Pending',  
-                    transaction_id=str(uuid.uuid4())  
+                    transaction_id=str(uuid.uuid4())
                 )
                 flower.stock -= quantity
                 flower.save()
@@ -64,8 +64,8 @@ class OrderView(APIView):
                 Your order has been successfully placed. Here are the details :
 
                 -Product : {flower.title}
-                -Quantity : {flower.quantity}
-                -Order Id : {flower.id}
+                -Quantity : {quantity}
+                -Order Id : {order.id}
 
                 We will notify you once your order is shipped.
 

@@ -4,7 +4,7 @@ from .models import Order
 class OrderCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ['flower', 'quantity', 'transaction_id']
+        fields = ['flower', 'quantity']
 
 class OrderSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()
@@ -20,5 +20,5 @@ class OrderSerializer(serializers.ModelSerializer):
 
 class OrderSerializerForCreate(serializers.Serializer):
     user_id = serializers.IntegerField()
-    product_id = serializers.IntegerField()
+    flower = serializers.IntegerField()
     quantity = serializers.IntegerField()

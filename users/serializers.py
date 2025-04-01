@@ -5,24 +5,31 @@ from .models import Profile
 from django.core.mail import send_mail
 
 class UserSerializer(serializers.ModelSerializer):
-    profile_img = serializers.CharField(source='profile.profile_img', required=False)
+    profile_img = serializers.CharField(source='profile.profile_img', required=False, allow_blank=True)
 
     class Meta:
         model = User
         fields = ['id', 'username', 'first_name', 'last_name', 'email', 'profile_img']
+        extra_kwargs = {
+            'username': {'required': False},
+            'email': {'required': False}
+        }
 
     def update(self, instance, validated_data):
         profile_data = validated_data.pop('profile', {})
-
+        
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
         instance.save()
 
         if profile_data:
             profile = instance.profile
-            profile_serializer = UserSerializer(profile, data=profile_data, partial=True)
-            if profile_serializer.is_valid():
-                profile_serializer.save()
+            if not hasattr(instance, 'profile'):
+                Profile.objects.create(user=instance, **profile_data)
+            else:
+                for attr, value in profile_data.items():
+                    setattr(profile, attr, value)
+                profile.save()
 
         return instance
 
